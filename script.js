@@ -2,29 +2,51 @@ const mainContainer = document.getElementById("main-container");
 const inputElement = document.getElementById("user-input");
 const submitButton = document.getElementById("submit-button");
 
-const word = "SPACE";
+const word = "APPLE";
 
 const user = {
+    win: false,
     attempts: 0,
-    input: ""
+    input: "",
+}
+
+function showWinnerScreen() {
+    const winnerScreen = document.createElement('div');
+    winnerScreen.className = "flex flex-col justify-center items-center w-3/4 h-3/4 bg-gray-800 border border-gray-500 text-gray-300 absolute inset-50 text-2xl";
+
+    const closeButton = document.createElement('button');
+    closeButton.className = "flex justify-center items-center w-8 h-8 absolute top-0 right-0 underline";
+    closeButton.textContent = "x";
+    closeButton.addEventListener("click", function() {
+        winnerScreen.remove();
+    });
+    
+    const wordElement = document.createElement('span');
+    const message = document.createElement('span');
+    wordElement.textContent = `The word is ${word}.`
+    message.textContent = `You won in ${user.attempts} attempts!`;
+    
+    winnerScreen.appendChild(closeButton);
+    winnerScreen.appendChild(wordElement); 
+    winnerScreen.appendChild(message);
+
+    document.body.appendChild(winnerScreen);
 }
 
 function displayWord() {
     const wordElement = document.createElement('div');
-    wordElement.className = "flex justify-evenly items-center w-full h-1/6 aspect-square"
+    wordElement.className = "flex justify-evenly items-center w-full h-1/6"
     
     for (let i = 0; i < 5; i++) {
         const letterElement = document.createElement('div');
-        letterElement.className = "flex justify-center items-center w-1/6 h-3/4 bg-gray-700 font-semibold text-3xl box-border select-none ";
+        letterElement.className = "flex justify-center items-center w-full h-full bg-gray-700 leading-none font-semibold text-3xl box-border select-none ";
+        
         if (user.input[i] === word[i]) {
-            letterElement.className += "bg-green-500";
-            console.log(user.input[i], "GREEN");
+            letterElement.className += "bg-green-500/50";
         } else if (word.includes(user.input[i]) && user.input[i] !== word[i]) {
-            letterElement.className += "bg-yellow-500";
-            console.log(user.input[i], "YELLOW")
+            letterElement.className += "bg-yellow-500/50";
         } else if (user.input[i] != word[i]) {
-            letterElement.className += "bg-red-500";
-            console.log(user.input[i], "RED");
+            letterElement.className += "bg-red-500/50";
         }
         
         letterElement.textContent = user.input[i];
@@ -37,28 +59,18 @@ function displayWord() {
 function sanitize(input) {
     const regexp = /[^a-zA-Z]/g;
     let word = input.trim().toUpperCase().replaceAll(regexp, "");
-    if (input.length == 5 && user.attempts < 6) {
+    if (word.length == 5 && user.attempts < 6) {
         return word;
-    } else {
-        
-    }
+    } else {}
 }
-
-// function checkWord() {
-//     if (user.input === word) {
-//         console.log("ITS THE WORD!!1!")
-//     } else {    
-//         for (let i in user.input) {
-            
-//         }    
-//     }
-// }
 
 function validateInput() {
     user.input = sanitize(inputElement.value);
-    if (user.input !== null) {
+    user.attempts += 1;
+    if (user.input == word) {
+        showWinnerScreen();
+    } else if (user.input !== null) {
         displayWord(user.input);
-        user.attempts += 1;
         inputElement.value = "";
     }
 }
