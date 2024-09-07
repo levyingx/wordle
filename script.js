@@ -26,29 +26,35 @@ function displayWord() {
 function sanitize(input) {
     const regexp = /[^a-zA-Z]/g;
     let word = input.trim().toUpperCase().replaceAll(regexp, "");
-    return word;
+    if (input.length == 5 && user.attempts < 6) {
+        return word;
+    } else {
+        
+    }
 }
 
 function checkWord() {
-    for (let i in user.input) {
-        if (user.input[i] === word[i]) {
-            console.log(user.input[i], "GREEN");
-        } else if (word.includes(user.input[i]) && user.input[i] !== word[i]) {
-            console.log(user.input[i], "YELLOW")
-        } else if (user.input[i] != word[i]) {
-            console.log(user.input[i], "RED");
-        }
+    if (user.input === word) {
+        console.log("ITS THE WORD!!1!")
+    } else {    
+        for (let i in user.input) {
+            if (user.input[i] === word[i]) {
+                console.log(user.input[i], "GREEN");
+            } else if (word.includes(user.input[i]) && user.input[i] !== word[i]) {
+                console.log(user.input[i], "YELLOW")
+            } else if (user.input[i] != word[i]) {
+                console.log(user.input[i], "RED");
+            }
+        }    
     }
 }
 
 function validateInput() {
-    user.input = sanitize(inputElement.value);
-    if (user.input.length == 5 && user.attempts < 6) {
-        checkWord();
-        displayWord(user.input);
-        user.attempts += 1;
-        inputElement.value = "";
-    }
+    user.input = sanitize(inputElement.value);    
+    checkWord();
+    displayWord(user.input);
+    user.attempts += 1;
+    inputElement.value = "";
 }
 
 window.addEventListener("keydown", (e) => {
