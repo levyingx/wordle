@@ -11,11 +11,22 @@ const user = {
 
 function displayWord() {
     const wordElement = document.createElement('div');
-    wordElement.className = "flex justify-evenly items-center w-full h-1/6 rounded-lg"
-
+    wordElement.className = "flex justify-evenly items-center w-full h-1/6 aspect-square"
+    
     for (let i = 0; i < 5; i++) {
         const letterElement = document.createElement('div');
-        letterElement.className = "flex justify-center items-center w-1/6 h-3/4 bg-gray-700 rounded-xl text-gray-200 font-semibold text-3xl box-border select-none";
+        letterElement.className = "flex justify-center items-center w-1/6 h-3/4 bg-gray-700 font-semibold text-3xl box-border select-none ";
+        if (user.input[i] === word[i]) {
+            letterElement.className += "bg-green-500";
+            console.log(user.input[i], "GREEN");
+        } else if (word.includes(user.input[i]) && user.input[i] !== word[i]) {
+            letterElement.className += "bg-yellow-500";
+            console.log(user.input[i], "YELLOW")
+        } else if (user.input[i] != word[i]) {
+            letterElement.className += "bg-red-500";
+            console.log(user.input[i], "RED");
+        }
+        
         letterElement.textContent = user.input[i];
         wordElement.appendChild(letterElement);          
     }
@@ -33,28 +44,23 @@ function sanitize(input) {
     }
 }
 
-function checkWord() {
-    if (user.input === word) {
-        console.log("ITS THE WORD!!1!")
-    } else {    
-        for (let i in user.input) {
-            if (user.input[i] === word[i]) {
-                console.log(user.input[i], "GREEN");
-            } else if (word.includes(user.input[i]) && user.input[i] !== word[i]) {
-                console.log(user.input[i], "YELLOW")
-            } else if (user.input[i] != word[i]) {
-                console.log(user.input[i], "RED");
-            }
-        }    
-    }
-}
+// function checkWord() {
+//     if (user.input === word) {
+//         console.log("ITS THE WORD!!1!")
+//     } else {    
+//         for (let i in user.input) {
+            
+//         }    
+//     }
+// }
 
 function validateInput() {
-    user.input = sanitize(inputElement.value);    
-    checkWord();
-    displayWord(user.input);
-    user.attempts += 1;
-    inputElement.value = "";
+    user.input = sanitize(inputElement.value);
+    if (user.input !== null) {
+        displayWord(user.input);
+        user.attempts += 1;
+        inputElement.value = "";
+    }
 }
 
 window.addEventListener("keydown", (e) => {
