@@ -12,23 +12,28 @@ const user = {
 
 function showWinnerScreen() {
     const winnerScreen = document.createElement('div');
-    winnerScreen.className = "flex flex-col justify-center items-center w-3/4 h-3/4 bg-gray-800 border border-gray-500 text-gray-300 absolute inset-50 text-2xl";
+    winnerScreen.className = "flex flex-col justify-center items-center w-64 h-64 bg-gray-300/75 text-gray-800 rounded-xl absolute inset-50 text-xl select-none";
 
-    const closeButton = document.createElement('button');
-    closeButton.className = "flex justify-center items-center w-8 h-8 absolute top-0 right-0 underline";
-    closeButton.textContent = "x";
-    closeButton.addEventListener("click", function() {
-        winnerScreen.remove();
-    });
-    
     const wordElement = document.createElement('span');
     const message = document.createElement('span');
     wordElement.textContent = `The word is ${word}.`
-    message.textContent = `You won in ${user.attempts} attempts!`;
     
-    winnerScreen.appendChild(closeButton);
+    if (user.attempts == 1) {
+        message.textContent = `You won in ${user.attempts} attempt!`;
+    } else {
+        message.textContent = `You won in ${user.attempts} attempts!`;
+    }
+    
+    const playAgain = document.createElement('button');
+    playAgain.className = "flex justify-center items-center w-4/6 h-8 p-4 bg-green-500/75 border border-green-500 rounded-full font-semibold transition ease-in-out hover:bg-green-500";
+    playAgain.textContent = "Play Again";
+    playAgain.addEventListener("click", () => {
+        location.reload();
+    })
+
     winnerScreen.appendChild(wordElement); 
     winnerScreen.appendChild(message);
+    winnerScreen.appendChild(playAgain);
 
     document.body.appendChild(winnerScreen);
 }
@@ -39,7 +44,7 @@ function displayWord() {
     
     for (let i = 0; i < 5; i++) {
         const letterElement = document.createElement('div');
-        letterElement.className = "flex justify-center items-center w-full h-full bg-gray-700 leading-none font-semibold text-3xl box-border select-none ";
+        letterElement.className = "flex justify-center items-center w-10 h-10 bg-gray-700 rounded-sm leading-none font-semibold text-3xl box-border select-none ";
         
         if (user.input[i] === word[i]) {
             letterElement.className += "bg-green-500";
@@ -69,6 +74,7 @@ function validateInput() {
     user.attempts += 1;
     if (user.input == word) {
         showWinnerScreen();
+        displayWord(user.input);
     } else if (user.input !== null) {
         displayWord(user.input);
         inputElement.value = "";
@@ -97,4 +103,4 @@ window.addEventListener("load", () => {
             word = json.wordlist[wordIndex];
             console.log(word);
         })
-})
+});
