@@ -2,7 +2,7 @@ const mainContainer = document.getElementById("main-container");
 const inputElement = document.getElementById("user-input");
 const submitButton = document.getElementById("submit-button");
 
-const word = "APPLE";
+let word;
 
 const user = {
     win: false,
@@ -35,18 +35,18 @@ function showWinnerScreen() {
 
 function displayWord() {
     const wordElement = document.createElement('div');
-    wordElement.className = "flex justify-evenly items-center w-full h-1/6"
+    wordElement.className = "flex justify-evenly items-center w-full h-full"
     
     for (let i = 0; i < 5; i++) {
         const letterElement = document.createElement('div');
         letterElement.className = "flex justify-center items-center w-full h-full bg-gray-700 leading-none font-semibold text-3xl box-border select-none ";
         
         if (user.input[i] === word[i]) {
-            letterElement.className += "bg-green-500/50";
+            letterElement.className += "bg-green-500";
         } else if (word.includes(user.input[i]) && user.input[i] !== word[i]) {
-            letterElement.className += "bg-yellow-500/50";
+            letterElement.className += "bg-yellow-500";
         } else if (user.input[i] != word[i]) {
-            letterElement.className += "bg-red-500/50";
+            letterElement.className += "bg-red-500";
         }
         
         letterElement.textContent = user.input[i];
@@ -75,6 +75,10 @@ function validateInput() {
     }
 }
 
+function getRandomNumber(min, max) {
+    return Math.floor(Math.random() * max) + min;
+}
+
 window.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
         validateInput();
@@ -84,3 +88,13 @@ window.addEventListener("keydown", (e) => {
 submitButton.addEventListener("click", function() {
     validateInput(); 
 });
+
+window.addEventListener("load", () => {
+    fetch('data.json')
+        .then(response => response.json())
+        .then(json => {
+            let wordIndex = getRandomNumber(0, json.wordlist.length);
+            word = json.wordlist[wordIndex];
+            console.log(word);
+        })
+})
